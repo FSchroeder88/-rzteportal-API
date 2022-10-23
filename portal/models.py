@@ -1,13 +1,13 @@
 import datetime
-from email.policy import default
 from django.db import models
 from django.conf import settings
+from django.contrib.auth.models import User
 
 class Doctor(models.Model):
-    ALLGEMEINMEDIZIN = 'AM'
-    RADIOLOGE = 'RL'
-    HAUTARZT = 'HA'
-    AUGENARZT = 'AA'
+    ALLGEMEINMEDIZIN = 'Allgemeinmedizin'
+    RADIOLOGE = 'Radiologe'
+    HAUTARZT = 'Hautarzt'
+    AUGENARZT = 'Augenarzt'
     speciality_CHOICES = [
         (ALLGEMEINMEDIZIN, 'Allgemeinmedizin'),
         (RADIOLOGE, 'Radiologe'),
@@ -29,9 +29,6 @@ class Doctor(models.Model):
     last_name = models.CharField(max_length=30)
     speciality = models.CharField(max_length=20, choices=speciality_CHOICES, default=ALLGEMEINMEDIZIN)
 
-        # def is_upperclass(self):
-        #     return self.speciality in {}
-
 class Patient(models.Model):
     first_name = models.CharField(max_length=30)
     last_name = models.CharField(max_length=30)
@@ -39,7 +36,8 @@ class Patient(models.Model):
 class Appointment(models.Model):
     title = models.CharField(max_length=30)
     description = models.CharField(max_length=30)
-    created_at = models.DateField(default=datetime.date.today)
-    date = models.DateTimeField()
+    created_at = models.DateField(default=datetime.date.today, blank=True, null=True)
+    date = models.DateTimeField(default=datetime.date.today, blank=True, null=True)
     patient= models.ForeignKey(Patient, on_delete=models.CASCADE, default=None)
-    Dr =models.ForeignKey(Doctor, on_delete=models.CASCADE, default=None)
+    dr =models.ForeignKey(Doctor, on_delete=models.CASCADE, default=None)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, default=None)
